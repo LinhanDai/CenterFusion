@@ -7,12 +7,12 @@ import os
 
 import torch
 import torch.utils.data
-from opts import opts
-from model.model import create_model, load_model, save_model
-from model.data_parallel import DataParallel
-from logger import Logger
-from dataset.dataset_factory import get_dataset
-from trainer import Trainer
+from lib.opts import opts
+from lib.model.model import create_model, load_model, save_model
+from lib.model.data_parallel import DataParallel
+from lib.logger import Logger
+from lib.dataset.dataset_factory import get_dataset
+from lib.trainer import Trainer
 from test import prefetch_test
 import json
 

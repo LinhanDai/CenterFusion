@@ -43,7 +43,7 @@ def load_model(model, model_path, opt, optimizer=None):
       state_dict[k] = state_dict_[k]
   model_state_dict = model.state_dict()
 
-  # check loaded parameters and created model parameters
+    # check loaded parameters and created model parameters
   for k in state_dict:
     if k in model_state_dict:
       if (state_dict[k].shape != model_state_dict[k].shape) or \
@@ -58,7 +58,7 @@ def load_model(model, model_path, opt, optimizer=None):
           else:
             model_state_dict[k] = state_dict[k][:model_state_dict[k].shape[0]]
           state_dict[k] = model_state_dict[k]
-        
+
         elif opt.warm_start_weights:
           try:
             print('Partially loading parameter {}, required shape{}, '\
@@ -74,7 +74,7 @@ def load_model(model, model_path, opt, optimizer=None):
                 'loaded shape{}.'.format(
                 k, model_state_dict[k].shape, state_dict[k].shape))
             state_dict[k] = model_state_dict[k]
-        
+
         else:
           print('Skip loading parameter {}, required shape{}, '\
                 'loaded shape{}.'.format(
@@ -86,6 +86,7 @@ def load_model(model, model_path, opt, optimizer=None):
     if not (k in state_dict):
       print('No param {}.'.format(k))
       state_dict[k] = model_state_dict[k]
+
   model.load_state_dict(state_dict, strict=False)
 
   # freeze backbone network

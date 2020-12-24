@@ -3,22 +3,22 @@ export CUDA_VISIBLE_DEVICES=0,1
 
 cd src
 # train
-python main.py \
+python3 main.py \
     ddd \
     --exp_id centerfusion \
     --shuffle_train \
-    --train_split train \
+    --train_split mini_train \
     --val_split mini_val \
-    --val_intervals 1 \
+    --val_intervals 10 \
     --run_dataset_eval \
     --nuscenes_att \
     --velocity \
-    --batch_size 32 \
+    --batch_size 4 \
     --lr 2.5e-4 \
     --num_epochs 60 \
     --lr_step 50 \
     --save_point 20,40,50 \
-    --gpus 0,1 \
+    --gpus 0 \
     --not_rand_crop \
     --flip 0.5 \
     --shift 0.1 \

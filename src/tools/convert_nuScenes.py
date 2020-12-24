@@ -16,9 +16,9 @@ from nuscenes.eval.detection.utils import category_to_detection_name
 from pyquaternion import Quaternion
 
 import _init_paths
-from utils.ddd_utils import compute_box_3d, project_to_image, alpha2rot_y
-from utils.ddd_utils import draw_box_3d, unproject_2d_to_3d
-from utils.pointcloud import RadarPointCloudWithVelocity as RadarPointCloud
+from src.lib.utils.ddd_utils import compute_box_3d, project_to_image, alpha2rot_y
+from src.lib.utils.ddd_utils import draw_box_3d, unproject_2d_to_3d
+from src.lib.utils.pointcloud import RadarPointCloudWithVelocity as RadarPointCloud
 from nuScenes_lib.utils_radar import map_pointcloud_to_image
 import time
 
@@ -27,12 +27,12 @@ OUT_PATH = DATA_PATH + 'annotations'
 SPLITS = {
           'mini_val': 'v1.0-mini',
           'mini_train': 'v1.0-mini',
-          'train': 'v1.0-trainval',
-          'val': 'v1.0-trainval',
-          'test': 'v1.0-test',
+          # 'train': 'v1.0-trainval',
+          # 'val': 'v1.0-trainval',
+          # 'test': 'v1.0-test',
           }
 
-DEBUG = False
+DEBUG = True
 CATS = ['car', 'truck', 'bus', 'trailer', 'construction_vehicle', 
         'pedestrian', 'motorcycle', 'bicycle', 'traffic_cone', 'barrier']
 SENSOR_ID = {'RADAR_FRONT': 7, 'RADAR_FRONT_LEFT': 9, 
@@ -53,7 +53,7 @@ RADARS_FOR_CAMERA = {
   'CAM_BACK_LEFT':   ["RADAR_BACK_LEFT", "RADAR_FRONT_LEFT"],
   'CAM_BACK_RIGHT':  ["RADAR_BACK_RIGHT", "RADAR_FRONT_RIGHT"],
   'CAM_BACK':        ["RADAR_BACK_RIGHT","RADAR_BACK_LEFT"]}
-NUM_SWEEPS = 6
+NUM_SWEEPS = 3
 
 suffix1 = '_{}sweeps'.format(NUM_SWEEPS) if NUM_SWEEPS > 1 else ''
 OUT_PATH = OUT_PATH + suffix1 + '/'
@@ -260,7 +260,7 @@ def main():
             img = cv2.imread(img_path)
             img_3d = img.copy()
             # plot radar point clouds
-            pc = np.array(image_info['pc_3d'])
+            pc = np.array(image_info['radar_pc'])
             cam_intrinsic = np.array(image_info['calib'])[:,:3]
             points, coloring, _ = map_pointcloud_to_image(pc, cam_intrinsic)
             for i, p in enumerate(points.T):
@@ -290,9 +290,9 @@ def main():
             
             cv2.imwrite('img.jpg', img)
             cv2.imwrite('img_3d.jpg', img_3d)
-            nusc.render_sample_data(image_token, out_path='nusc_img.jpg')
+            #nusc.render_sample_data(image_token, out_path='nusc_img.jpg')
             input('press enter to continue')
-            # plt.show()
+            #plt.show()\
     
     print('reordering images')
     images = ret['images']

@@ -12,11 +12,11 @@ from progress.bar import Bar
 import torch
 import copy
 
-from opts import opts
-from logger import Logger
-from utils.utils import AverageMeter
-from dataset.dataset_factory import dataset_factory
-from detector import Detector
+from lib.opts import opts
+from lib.logger import Logger
+from lib.utils.utils import AverageMeter
+from lib.dataset.dataset_factory import dataset_factory
+from lib.detector import Detector
 
 
 class PrefetchDataset(torch.utils.data.Dataset):
@@ -143,8 +143,8 @@ def prefetch_test(opt):
     json.dump(_to_list(copy.deepcopy(results)), 
               open(opt.save_dir + '/save_results_{}{}.json'.format(
                 opt.test_dataset, opt.dataset_version), 'w'))
-  dataset.run_eval(results, opt.save_dir, n_plots=opt.eval_n_plots, 
-                   render_curves=opt.eval_render_curves)
+  # dataset.run_eval(results, opt.save_dir, n_plots=opt.eval_n_plots,
+  #                  render_curves=opt.eval_render_curves)
 
 def test(opt):
   os.environ['CUDA_VISIBLE_DEVICES'] = opt.gpus_str

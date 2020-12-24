@@ -1,8 +1,8 @@
-export CUDA_VISIBLE_DEVICES=1
+export CUDA_VISIBLE_DEVICES=0
 cd src
 
 ## Perform detection and evaluation
-python test.py ddd \
+python3 test.py ddd \
     --exp_id centerfusion \
     --dataset nuscenes \
     --val_split mini_val \
@@ -17,4 +17,5 @@ python test.py ddd \
     --pc_z_offset -0.0 \
     --load_model ../models/centerfusion_e60.pth \
     --flip_test \
+    --debug 4 \
     # --resume \

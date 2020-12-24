@@ -278,7 +278,7 @@ class nuScenes(GenericDataset):
     
     if task == 'det':
       output_dir = '{}/nuscenes_eval_det_output_{}/'.format(save_dir, split)
-      os.system('python ' + \
+      os.system('python3 ' + \
         'tools/nuscenes-devkit/python-sdk/nuscenes/eval/detection/evaluate.py ' + \
         '{}/results_nuscenes_{}_{}.json '.format(save_dir, task, split) + \
         '--output_dir {} '.format(output_dir) + \
@@ -289,12 +289,12 @@ class nuScenes(GenericDataset):
         '--render_curves {} '.format(render_curves))
     else:
       output_dir = '{}/nuscenes_evaltracl__output/'.format(save_dir)
-      os.system('python ' + \
+      os.system('python3 ' + \
         'tools/nuscenes-devkit/python-sdk/nuscenes/eval/tracking/evaluate.py ' + \
         '{}/results_nuscenes_{}_{}.json '.format(save_dir, task, split) + \
         '--output_dir {} '.format(output_dir) + \
         '--dataroot ../data/nuscenes/')
-      os.system('python ' + \
+      os.system('python3 ' + \
         'tools/nuscenes-devkit/python-sdk-alpha02/nuscenes/eval/tracking/evaluate.py ' + \
         '{}/results_nuscenes_{}_{}.json '.format(save_dir, task, split) + \
         '--output_dir {} '.format(output_dir) + \

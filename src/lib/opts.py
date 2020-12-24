@@ -53,7 +53,7 @@ class opts(object):
                              help='used when training in slurm clusters.')
 
     # log
-    self.parser.add_argument('--print_iter', type=int, default=0, 
+    self.parser.add_argument('--print_iter', type=int, default=1,
                              help='disable progress bar and print to screen.')
     self.parser.add_argument('--save_all', action='store_true',
                              help='save model to disk every 5 epochs.')
@@ -81,7 +81,7 @@ class opts(object):
     self.parser.add_argument('--tango_color', action='store_true')
 
     # model
-    self.parser.add_argument('--arch', default='dla_34', 
+    self.parser.add_argument('--arch', default='dla_34',
                              help='model architecture. Currently tested'
                                   'res_18 | res_101 | resdcn_18 | resdcn_101 |'
                                   'dlav0_34 | dla_34 | hourglass')
