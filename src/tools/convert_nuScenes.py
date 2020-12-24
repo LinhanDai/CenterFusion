@@ -32,7 +32,7 @@ SPLITS = {
           # 'test': 'v1.0-test',
           }
 
-DEBUG = True
+DEBUG = False
 CATS = ['car', 'truck', 'bus', 'trailer', 'construction_vehicle', 
         'pedestrian', 'motorcycle', 'bicycle', 'traffic_cone', 'barrier']
 SENSOR_ID = {'RADAR_FRONT': 7, 'RADAR_FRONT_LEFT': 9, 
