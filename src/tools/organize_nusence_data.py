@@ -31,7 +31,7 @@ SCENE_SPLITS = {
 'mini_train':
     ['scene-0061'],
 'mini_val':
-    ['scene-0103'],
+    ['scene-0103', 'scene-0916'],
 }
 
 
@@ -63,7 +63,13 @@ def main():
                     sample_data_token = sample['data'][radar_sensor[0]]
                     current_sd_rec = nusc.get('sample_data', sample_data_token)
                     radar_file_name = current_sd_rec['filename']
-                    fileName_info = {'imageName': image_file_name,
+                    width = image_data['width']
+                    height = image_data['height']
+                    fileName_info = {
+                                     'sample_token': sample['token'],
+                                     'width': width,
+                                     'height': height,
+                                     'imageName': image_file_name,
                                      'radarName': radar_file_name
                                      }
                     ret['fileName'].append(fileName_info)
@@ -98,9 +104,15 @@ def main():
                     for box in boxes:
                         center = box.center
                         wlh = box.wlh
+                        name = box.name
+                        rotation_matrix = box.rotation_matrix
+                        vel = nusc.box_velocity(box.token).tolist()
                         ann = {
+                            'name': name,
                             "center": center.tolist(),
-                            "wlh": wlh.tolist()
+                            "wlh": wlh.tolist(),
+                            "rotation_matrix": rotation_matrix.tolist(),
+                            "vel": vel
                         }
                         anns.append(ann)
                     ret['annotations'].append(anns)

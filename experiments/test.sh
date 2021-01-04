@@ -12,10 +12,10 @@ python3 test.py ddd \
     --velocity \
     --gpus 0 \
     --pointcloud \
-    --radar_sweeps 3 \
+    --radar_sweeps 1 \
     --max_pc_dist 60.0 \
     --pc_z_offset -0.0 \
-    --load_model ../models/centerfusion_e60.pth \
+    --load_model ../exp/ddd/centerfusion/model_last.pth \
     --flip_test \
     --debug 4 \
     # --resume \

@@ -29,7 +29,7 @@ SPLITS = {
     'mini_train': 'v1.0-mini',
 }
 
-DEBUG = False
+DEBUG = True
 CATS = ['car', 'truck', 'bus', 'trailer', 'construction_vehicle',
         'pedestrian', 'motorcycle', 'bicycle', 'traffic_cone', 'barrier']
 
@@ -42,7 +42,7 @@ USED_SENSOR = ['CAM_FRONT']
 RADARS_FOR_CAMERA = {
     'CAM_FRONT':       ["RADAR_FRONT"]
 }
-NUM_SWEEPS = 3
+NUM_SWEEPS = 1
 
 suffix1 = '_{}sweeps'.format(NUM_SWEEPS) if NUM_SWEEPS > 1 else ''
 OUT_PATH = OUT_PATH + suffix1 + '/'
@@ -255,32 +255,32 @@ def main():
                             pt_3d = unproject_2d_to_3d(pt_2d, ann['depth'], calib)
                             pt_3d[1] += ann['dim'][0] / 2
                             print('loc      ', pt_3d)
-                        # cv2.imshow('img', img)
-                        # cv2.imshow('img_3d', img_3d)
-                        # cv2.waitKey()
+                        cv2.imshow('img', img)
+                        cv2.imshow('img_3d', img_3d)
+                        cv2.waitKey(100)
 
-                        cv2.imwrite('img.jpg', img)
-                        cv2.imwrite('img_3d.jpg', img_3d)
+                        # cv2.imwrite('img.jpg', img)
+                        # cv2.imwrite('img_3d.jpg', img_3d)
                         # nusc.render_sample_data(image_token, out_path='nusc_img.jpg')
-                        input('press enter to continue')
+                        #input('press enter to continue')
                         # plt.show()\
 
-        print('reordering images')
-        images = ret['images']
-        video_sensor_to_images = {}
-        for image_info in images:
-            tmp_seq_id = image_info['video_id'] * 20 + image_info['sensor_id']
-            if tmp_seq_id in video_sensor_to_images:
-                video_sensor_to_images[tmp_seq_id].append(image_info)
-            else:
-                video_sensor_to_images[tmp_seq_id] = [image_info]
-        ret['images'] = []
-        for tmp_seq_id in sorted(video_sensor_to_images):
-            ret['images'] = ret['images'] + video_sensor_to_images[tmp_seq_id]
-
-        print('{} {} images {} boxes'.format(
-            split, len(ret['images']), len(ret['annotations'])))
-        print('out_path', out_path)
+        # print('reordering images')
+        # images = ret['images']
+        # video_sensor_to_images = {}
+        # for image_info in images:
+        #     tmp_seq_id = image_info['video_id'] * 20 + image_info['sensor_id']
+        #     if tmp_seq_id in video_sensor_to_images:
+        #         video_sensor_to_images[tmp_seq_id].append(image_info)
+        #     else:
+        #         video_sensor_to_images[tmp_seq_id] = [image_info]
+        # ret['images'] = []
+        # for tmp_seq_id in sorted(video_sensor_to_images):
+        #     ret['images'] = ret['images'] + video_sensor_to_images[tmp_seq_id]
+        #
+        # print('{} {} images {} boxes'.format(
+        #     split, len(ret['images']), len(ret['annotations'])))
+        # print('out_path', out_path)
         json.dump(ret, open(out_path, 'w'))
 
 

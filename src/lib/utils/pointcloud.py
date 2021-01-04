@@ -52,7 +52,6 @@ def map_pointcloud_to_image(pc, cam_intrinsic, img_shape=(1600,900)):
 ## A RadarPointCloud class where Radar velocity values are correctly 
 # transformed to the target coordinate system
 class RadarPointCloudWithVelocity(RadarPointCloud):
-    
     @classmethod
     def rotate_velocity(cls, pointcloud, transform_matrix):
         n_points = pointcloud.shape[1]
@@ -65,6 +64,45 @@ class RadarPointCloudWithVelocity(RadarPointCloud):
 
         return pointcloud
 
+    @classmethod
+    def read_radar_data(cls, dataroot, file_info, params_info, nsweeps: int = 1, min_distance: float = 1.0):
+        points = np.zeros((cls.nbr_dims(), 0))
+        all_pc = cls(points)
+
+        # Homogeneous transform from ego car frame to reference frame.
+        ref_from_car = transform_matrix(params_info['cam_t'], Quaternion(params_info['cam_r']), inverse=True)
+        ref_from_car_rot = transform_matrix([0.0, 0.0, 0.0], Quaternion(params_info['cam_r']), inverse=True)
+
+        # Homogeneous transformation matrix from global to _current_ ego car frame.
+        car_from_global = transform_matrix(params_info['ego_to_global_t'], Quaternion(params_info['ego_to_global_r']), inverse=True)
+        car_from_global_rot = transform_matrix([0.0, 0.0, 0.0], Quaternion(params_info['ego_to_global_r']), inverse=True)
+
+        for _ in range(nsweeps):
+            # Load up the pointcloud and remove points close to the sensor.
+            current_pc = cls.from_file(osp.join(dataroot, file_info['radarName']))
+            current_pc.remove_close(min_distance)
+            # Get past pose.
+            global_from_car = transform_matrix(params_info['ego_cur_t'],
+                                               Quaternion(params_info['ego_cur_r']), inverse=False)
+            global_from_car_rot = transform_matrix([0.0, 0.0, 0.0],
+                                               Quaternion(params_info['ego_cur_r']), inverse=False)
+
+            # Homogeneous transformation matrix from sensor coordinate frame to ego car frame.
+            car_from_current = transform_matrix(params_info['radar_t'], Quaternion(params_info['radar_r']),
+                                                inverse=False)
+            car_from_current_rot = transform_matrix([0.0, 0.0, 0.0], Quaternion(params_info['radar_r']), inverse=False)
+
+            # Fuse four transformation matrices into one and perform transform.
+            trans_matrix = reduce(np.dot, [ref_from_car, car_from_global, global_from_car, car_from_current])
+            velocity_trans_matrix = reduce(np.dot, [ref_from_car_rot, car_from_global_rot, global_from_car_rot, car_from_current_rot])
+            current_pc.transform(trans_matrix)
+
+            # Do the required rotations to the Radar velocity values
+            current_pc.points = cls.rotate_velocity(current_pc.points, velocity_trans_matrix)
+
+            # Merge with key pc.
+            all_pc.points = np.hstack((all_pc.points, current_pc.points))
+        return all_pc
 
     @classmethod
     def from_file_multisweep(cls,
